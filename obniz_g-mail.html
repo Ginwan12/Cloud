@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>人感センサーとG-mail</title>
+    <script src="https://unpkg.com/obniz@3.x/obniz.js"></script>
+  </head>
+  <body>
+    <div style="color:#ff0000">
+    <h2 align="center"><実行中></h2>
+    </div>
+    <h3 align="center">センサーが目の前に人が通過した場合、ご登録されているG-mailに動作中は自動で連絡をさせていただきます。</h3>
+    <h3 align="center">もし、通知が来なかった場合は、再接続もしくは更新をお願いいたします。</h3>
+    <h3 align="center">それで改善されなかった場合は、カスタマーセンターまでのご連絡をお願いいたします。</h3>
+    <br>
+    <h3 align="left">電話番号：〇〇-〇〇〇〇-〇〇</h3>
+  </body>
+</html>
+<script>
+const EVENT = "obniz_mail";
+const KEY = "nSm9aGB_-s8i4lv-1CTgMXM336Gs92qQggTxcwnkUQ0";
+
+let obniz = new Obniz("OBNIZ_ID_HEAR");
+obniz.onconnect = async () => {
+const sensor = obniz.wired("Keyestudio_PIR", {
+signal: 0,
+vcc: 1,
+gnd: 2
+});
+obniz.display.print("実行中");
+sensor.onchange = async val => {
+console.log(val ? "確認いたしました" : "動作を一時停止します");
+if (val)
+await fetch(`https://maker.ifttt.com/trigger/${EVENT}/with/key/${KEY}`);
+};
+};
+</script>
